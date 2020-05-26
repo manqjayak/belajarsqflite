@@ -53,11 +53,33 @@ class _HomeState extends State<Home> {
         subtitle: Text(contact.phone.toString()),
         trailing: GestureDetector(
           child: Icon(Icons.delete),
-          onTap: () async {
-            int result = await dbHelper.delete(contact);
-            if (result > 0) {
-              updateListView();
-            }
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text("Peringatan"),
+                    content: Text("Ingin Menghapus ${contact.name}?"),
+                    actions: [
+                      FlatButton(
+                        onPressed: () async {
+                          int result = await dbHelper.delete(contact);
+                          if (result > 0) {
+                            updateListView();
+                          }
+                          Navigator.pop(context);
+                        },
+                        child: Text("Iya"),
+                      ),
+                      FlatButton(
+                        child: Text("Tidak"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      )
+                    ],
+                  );
+                });
           },
         ),
         onTap: () async {
